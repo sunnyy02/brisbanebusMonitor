@@ -1,0 +1,126 @@
+﻿
+@{
+    ViewBag.Title = "TitleSearch2";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<div class="container">
+    <!-- Page Heading/Breadcrumbs -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                Welcome, Max
+                <small></small>
+            </h1>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/Home/Index">Home</a>
+                </li>
+                <li class="active">Title Search</li>
+            </ol>
+        </div>
+    </div>
+    <!-- /.row -->
+    <!-- Content Row -->
+    <div class="row">
+        <!-- Sidebar Column -->
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="/Home/NewApplication2" class="list-group-item">New Application</a>
+                <a href="/Home/Index2" class="list-group-item ">My Applications</a>
+                <a href="/Home/MyLicenses2" class="list-group-item ">My Licenses</a>
+                <a href="/Home/TitleSearch2" class="list-group-item active">Title Search</a>
+
+            </div>
+        </div>
+        <!-- Content Column -->
+        <div class="col-xs-12 col-md-9">
+            <div class="panel panel-default ">
+                <div class="panel-heading">
+                    <h3>Title Search</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="col-sm-12 col-md-6 pull-left">
+                            @*<form class="navbar-form" role="search">*@
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="enter name to search" name="q">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default" id="SearchButton" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                                </div>
+                            </div>
+                            @*</form>*@
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+
+                    <div id="result" style="display: none">
+                        <div class="form-group">
+                            <label for="InputName">Block Number:</label>
+                            <div class="input-group">
+                                @*<input type="text" class="form-control" name="InputName" id="InputName" placeholder="Enter Name" required>
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>*@
+                                <label>144032</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="InputName">Under License:</label>
+                            <div class="input-group">
+                                @*<input type="text" class="form-control" name="InputName" id="InputName" placeholder="Enter Name" required>
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>*@
+                                <label>PPL License 144032</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="InputName">Status:</label>
+                            <div class="input-group">
+                                @*<input type="text" class="form-control" name="InputName" id="InputName" placeholder="Enter Name" required>
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>*@
+                                <label>Not Available</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="InputName">Map Sheet:</label>
+                            <div class="input-group">
+                                @*<input type="text" class="form-control" name="InputName" id="InputName" placeholder="Enter Name" required>
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>*@
+                                <label>Map Sheet 1</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                @*<input type="text" class="form-control" name="InputName" id="InputName" placeholder="Enter Name" required>
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>*@
+                                <img src="~/Images/Papua  New Guinea.jpg" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                       
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+<script>
+    $(document).ready(function () {
+
+        $('#SearchButton').click(function () {
+            $('#result').slideDown("slow", function () {
+                // Animation complete.
+            });
+        });
+
+        $('#FirstTimeLink').hide();
+        $('#signInForm').hide();
+        $('#welcomeMessage').show();
+        $('#menuDropdown').show();
+    });
+</script>
+

@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Renewal";
+}
+
+
+<div class="container">
+    <br />
+    <h2>Renewal</h2>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <label>Processing Fee (Payment Reference Number): </label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="clear"></div>
+        <div class="biller-content">
+            <div class="half-box">
+                <ul class="biller-content-list">
+                    <li>
+                        <p class="biller-content-list-title">Biller Code</p>
+                        <p class="biller-content-list-content">
+                            172015
+                        </p>
+                    </li>
+                    <li>
+                        <p class="biller-content-list-title">Biller Short Name</p>
+                        <p class="biller-content-list-content">
+                            Ignite by Westpac
+                        </p>
+                    </li>
+                    <li>
+                        <p class="biller-content-list-title">Biller Long Name</p>
+                        <p class="biller-content-list-content">
+                            Ignite by Westpac
+                        </p>
+                    </li>
+                    <li>
+                        <p class="biller-content-list-title">Location of the Reference Number</p>
+                        <p class="biller-content-list-content">
+                            TOP RIGHT HAND OF STATEMENT
+                        </p>
+                    </li>
+                    <li>
+                        <p class="biller-content-list-title">This Biller accepts</p>
+                        <p class="biller-content-list-content">
+                            Cheque, Savings or Debit Card
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+    </div>
+    <br />
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <label>Application Fee (Payment Reference Number): </label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control">
+        </div>
+    </div>
+    <script>
+
+        $(document).ready(function () {
+            $('#FirstTimeLink').hide();
+            $('#signInForm').hide();
+            $('#welcomeMessage').show();
+            $('#menuDropdown').show();
+
+        });
+    </script>
+</div>

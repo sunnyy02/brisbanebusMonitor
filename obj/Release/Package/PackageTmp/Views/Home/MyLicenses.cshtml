@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewBag.Title = "MyLicenses";
+}
+<div class="container">
+    <h2>My license</h2>
+
+   
+    <div class="row">
+        <h4>License PRL</h4> <label>Status: Active</label>
+    </div>
+    <div class="row">
+        <lable>Application Date: @DateTime.Now.ToShortDateString()</lable>
+    </div>
+    <div class="row">
+        <a class="btn btn-primary" href="/home/Relinquish">Relinquish</a>
+    </div>
+    <div class="divider"></div>
+
+    <br /><br />
+    <div class="row">
+        <h4>License PDL</h4> <label>Status: Active</label>
+    </div>
+    <div class="row">
+        <lable>Application Date: @DateTime.Now.AddMonths(-3).ToShortDateString()</lable>
+    </div>
+    <div class="row">
+        <a class="btn btn-primary" href="/home/Relinquish">Relinquish</a>
+    </div>
+
+    <br /><br />
+    <div class="row">
+        <h4>License Pipeline</h4> <label>Status: Pending Renewal</label>
+    </div>
+    <div class="row">
+        <lable>Application Date: @DateTime.Now.AddMonths(-6).ToShortDateString()</lable>
+    </div>
+    <div class="row">
+        <a href="/home/Renewal" class="btn btn-primary">Renewal</a>
+    </div><script>
+
+        $(document).ready(function () {
+
+
+                $('#FirstTimeLink').hide();
+                $('#signInForm').hide();
+                $('#welcomeMessage').show();
+                $('#menuDropdown').show();
+
+        });
+</script>
+</div>

@@ -1,0 +1,626 @@
+<!-- Main jumbotron for a primary marketing message or call to action -->
+    
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+<script type="text/javascript" src="~/Scripts/v3_epoly.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/mobileservices/MobileServices.Web-1.2.5.min.js"></script>
+<script>
+        var map;
+        var timeLineFrom = [];
+        var busList = [];
+        var routeLine = []; // bus trip lines
+        var poly2 = [];
+        var routeTimetable = [];
+
+        var distances = [];
+        var timerHandle = null;
+        var marker = [];
+        var infowindow = null;
+
+        var steps = []
+        var step = 100; // 5; // metres
+        var tick = 100; // milliseconds
+        var tickCount = 0;
+        var maxTick = 360; //default (15 mins)
+        var eol = [];
+        var k = 0;
+        var stepnum = 0;
+        var speedRatio = 25;
+        var lastVertex = [];
+        var mocktt ='[{ "tripSeq": 1, "arrival_delay": 97, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:20:37.000Z", "ArrivalTimeOffset": 52, "stop_lat": " -27.546550", "stop_lon": " 153.064253" }, { "tripSeq": 1, "arrival_delay": 16, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:28:16.000Z", "ArrivalTimeOffset": 511, "stop_lat": " -27.484505", "stop_lon": " 153.028213" }, { "tripSeq": 1, "arrival_delay": -24, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:29:36.000Z", "ArrivalTimeOffset": 591, "stop_lat": " -27.480721", "stop_lon": " 153.021835" }, { "tripSeq": 1, "arrival_delay": 30, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:32:30.000Z", "ArrivalTimeOffset": 765, "stop_lat": " -27.473232", "stop_lon": " 153.019415" }, { "tripSeq": 1, "arrival_delay": -86, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:34:34.000Z", "ArrivalTimeOffset": 889, "stop_lat": " -27.470717", "stop_lon": " 153.023825" }, { "tripSeq": 2, "arrival_delay": 115, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T13:57:55.000Z", "ArrivalTimeOffset": -1310, "stop_lat": " -27.636898", "stop_lon": " 153.030696" }, { "tripSeq": 2, "arrival_delay": 90, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T13:58:30.000Z", "ArrivalTimeOffset": -1275, "stop_lat": " -27.638507", "stop_lon": " 153.034434" }, { "tripSeq": 2, "arrival_delay": 10, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T13:59:10.000Z", "ArrivalTimeOffset": -1235, "stop_lat": " -27.638567", "stop_lon": " 153.040471" }, { "tripSeq": 2, "arrival_delay": 42, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T13:59:42.000Z", "ArrivalTimeOffset": -1203, "stop_lat": " -27.638164", "stop_lon": " 153.043837" }, { "tripSeq": 2, "arrival_delay": 17, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:01:17.000Z", "ArrivalTimeOffset": -1108, "stop_lat": " -27.638974", "stop_lon": " 153.049022" }, { "tripSeq": 2, "arrival_delay": -9, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:01:51.000Z", "ArrivalTimeOffset": -1074, "stop_lat": null, "stop_lon": null }, { "tripSeq": 3, "arrival_delay": -454, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T13:50:26.000Z", "ArrivalTimeOffset": -1759, "stop_lat": " -27.484505", "stop_lon": " 153.028213" }, { "tripSeq": 3, "arrival_delay": -494, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T13:51:46.000Z", "ArrivalTimeOffset": -1679, "stop_lat": " -27.480721", "stop_lon": " 153.021835" }, { "tripSeq": 3, "arrival_delay": -440, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T13:54:40.000Z", "ArrivalTimeOffset": -1505, "stop_lat": " -27.473232", "stop_lon": " 153.019415" }, { "tripSeq": 3, "arrival_delay": -555, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T13:56:45.000Z", "ArrivalTimeOffset": -1380, "stop_lat": " -27.470717", "stop_lon": " 153.023825" }, { "tripSeq": 4, "arrival_delay": -237, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:09:03.000Z", "ArrivalTimeOffset": -642, "stop_lat": " -27.484505", "stop_lon": " 153.028213" }, { "tripSeq": 4, "arrival_delay": -276, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:10:24.000Z", "ArrivalTimeOffset": -561, "stop_lat": " -27.480721", "stop_lon": " 153.021835" }, { "tripSeq": 4, "arrival_delay": -223, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:13:17.000Z", "ArrivalTimeOffset": -388, "stop_lat": " -27.473232", "stop_lon": " 153.019415" }, { "tripSeq": 4, "arrival_delay": -338, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:15:22.000Z", "ArrivalTimeOffset": -263, "stop_lat": " -27.470717", "stop_lon": " 153.023825" }, { "tripSeq": 5, "arrival_delay": 349, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:20:49.000Z", "ArrivalTimeOffset": 64, "stop_lat": " -27.605887", "stop_lon": " 153.042769" }, { "tripSeq": 5, "arrival_delay": 294, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:21:54.000Z", "ArrivalTimeOffset": 129, "stop_lat": " -27.612113", "stop_lon": " 153.040740" }, { "tripSeq": 5, "arrival_delay": 278, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:23:38.000Z", "ArrivalTimeOffset": 233, "stop_lat": " -27.611357", "stop_lon": " 153.033291" }, { "tripSeq": 5, "arrival_delay": 231, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:24:51.000Z", "ArrivalTimeOffset": 306, "stop_lat": " -27.617570", "stop_lon": " 153.028867" }, { "tripSeq": 5, "arrival_delay": 199, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:27:19.000Z", "ArrivalTimeOffset": 454, "stop_lat": " -27.628854", "stop_lon": " 153.029152" }, { "tripSeq": 5, "arrival_delay": 169, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:27:49.000Z", "ArrivalTimeOffset": 484, "stop_lat": " -27.631681", "stop_lon": " 153.029532" }, { "tripSeq": 5, "arrival_delay": 166, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:28:46.000Z", "ArrivalTimeOffset": 541, "stop_lat": " -27.636898", "stop_lon": " 153.030696" }, { "tripSeq": 5, "arrival_delay": 141, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:29:21.000Z", "ArrivalTimeOffset": 576, "stop_lat": " -27.638507", "stop_lon": " 153.034434" }, { "tripSeq": 5, "arrival_delay": 60, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:30:00.000Z", "ArrivalTimeOffset": 615, "stop_lat": " -27.638567", "stop_lon": " 153.040471" }, { "tripSeq": 5, "arrival_delay": 92, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:30:32.000Z", "ArrivalTimeOffset": 647, "stop_lat": " -27.638164", "stop_lon": " 153.043837" }, { "tripSeq": 5, "arrival_delay": 68, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:32:08.000Z", "ArrivalTimeOffset": 743, "stop_lat": " -27.638974", "stop_lon": " 153.049022" }, { "tripSeq": 5, "arrival_delay": 42, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:32:42.000Z", "ArrivalTimeOffset": 777, "stop_lat": null, "stop_lon": null }, { "tripSeq": 6, "arrival_delay": 51, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:17:51.000Z", "ArrivalTimeOffset": -114, "stop_lat": " -27.570468", "stop_lon": " 153.064526" }, { "tripSeq": 6, "arrival_delay": 123, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:20:03.000Z", "ArrivalTimeOffset": 18, "stop_lat": " -27.576117", "stop_lon": " 153.063379" }, { "tripSeq": 6, "arrival_delay": 22, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:21:22.000Z", "ArrivalTimeOffset": 97, "stop_lat": " -27.582545", "stop_lon": " 153.062231" }, { "tripSeq": 6, "arrival_delay": 109, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:23:49.000Z", "ArrivalTimeOffset": 244, "stop_lat": " -27.590722", "stop_lon": " 153.060243" }, { "tripSeq": 6, "arrival_delay": 115, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:25:55.000Z", "ArrivalTimeOffset": 370, "stop_lat": " -27.600430", "stop_lon": " 153.058483" }, { "tripSeq": 6, "arrival_delay": 81, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:26:21.000Z", "ArrivalTimeOffset": 396, "stop_lat": " -27.602486", "stop_lon": " 153.056824" }, { "tripSeq": 6, "arrival_delay": 63, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:28:03.000Z", "ArrivalTimeOffset": 498, "stop_lat": " -27.609832", "stop_lon": " 153.054757" }, { "tripSeq": 6, "arrival_delay": 128, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:32:08.000Z", "ArrivalTimeOffset": 743, "stop_lat": " -27.605887", "stop_lon": " 153.042769" }, { "tripSeq": 6, "arrival_delay": 73, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:33:13.000Z", "ArrivalTimeOffset": 808, "stop_lat": " -27.612113", "stop_lon": " 153.040740" }, { "tripSeq": 6, "arrival_delay": 56, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:34:56.000Z", "ArrivalTimeOffset": 911, "stop_lat": " -27.611357", "stop_lon": " 153.033291" }, { "tripSeq": 6, "arrival_delay": 10, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:36:10.000Z", "ArrivalTimeOffset": 985, "stop_lat": " -27.617570", "stop_lon": " 153.028867" }, { "tripSeq": 6, "arrival_delay": -22, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:38:38.000Z", "ArrivalTimeOffset": 1133, "stop_lat": " -27.628854", "stop_lon": " 153.029152" }, { "tripSeq": 6, "arrival_delay": -52, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:39:08.000Z", "ArrivalTimeOffset": 1163, "stop_lat": " -27.631681", "stop_lon": " 153.029532" }, { "tripSeq": 6, "arrival_delay": -56, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:40:04.000Z", "ArrivalTimeOffset": 1219, "stop_lat": " -27.636898", "stop_lon": " 153.030696" }, { "tripSeq": 6, "arrival_delay": -81, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:40:39.000Z", "ArrivalTimeOffset": 1254, "stop_lat": " -27.638507", "stop_lon": " 153.034434" }, { "tripSeq": 6, "arrival_delay": -161, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:41:19.000Z", "ArrivalTimeOffset": 1294, "stop_lat": " -27.638567", "stop_lon": " 153.040471" }, { "tripSeq": 6, "arrival_delay": -129, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:41:51.000Z", "ArrivalTimeOffset": 1326, "stop_lat": " -27.638164", "stop_lon": " 153.043837" }, { "tripSeq": 6, "arrival_delay": -154, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:43:26.000Z", "ArrivalTimeOffset": 1421, "stop_lat": " -27.638974", "stop_lon": " 153.049022" }, { "tripSeq": 6, "arrival_delay": -179, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:44:01.000Z", "ArrivalTimeOffset": 1456, "stop_lat": null, "stop_lon": null }, { "tripSeq": 7, "arrival_delay": 77, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:19:17.000Z", "ArrivalTimeOffset": -28, "stop_lat": " -27.588496", "stop_lon": " 153.060354" }, { "tripSeq": 7, "arrival_delay": -9, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:20:51.000Z", "ArrivalTimeOffset": 66, "stop_lat": " -27.581746", "stop_lon": " 153.062056" }, { "tripSeq": 7, "arrival_delay": 27, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:22:27.000Z", "ArrivalTimeOffset": 162, "stop_lat": " -27.576300", "stop_lon": " 153.063015" }, { "tripSeq": 7, "arrival_delay": 46, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:24:46.000Z", "ArrivalTimeOffset": 301, "stop_lat": " -27.570168", "stop_lon": " 153.064236" }, { "tripSeq": 7, "arrival_delay": 105, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:26:45.000Z", "ArrivalTimeOffset": 420, "stop_lat": " -27.564220", "stop_lon": " 153.065322" }, { "tripSeq": 7, "arrival_delay": 79, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:28:19.000Z", "ArrivalTimeOffset": 514, "stop_lat": " -27.559553", "stop_lon": " 153.066142" }, { "tripSeq": 7, "arrival_delay": 8, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:32:08.000Z", "ArrivalTimeOffset": 743, "stop_lat": " -27.546550", "stop_lon": " 153.064253" }, { "tripSeq": 7, "arrival_delay": -73, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:39:47.000Z", "ArrivalTimeOffset": 1202, "stop_lat": " -27.484505", "stop_lon": " 153.028213" }, { "tripSeq": 7, "arrival_delay": -113, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:41:07.000Z", "ArrivalTimeOffset": 1282, "stop_lat": " -27.480721", "stop_lon": " 153.021835" }, { "tripSeq": 7, "arrival_delay": -59, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:44:01.000Z", "ArrivalTimeOffset": 1456, "stop_lat": " -27.473232", "stop_lon": " 153.019415" }, { "tripSeq": 7, "arrival_delay": -175, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:46:05.000Z", "ArrivalTimeOffset": 1580, "stop_lat": " -27.470717", "stop_lon": " 153.023825" }, { "tripSeq": 8, "arrival_delay": 30, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:24:30.000Z", "ArrivalTimeOffset": 285, "stop_lat": " -27.546738", "stop_lon": " 153.064682" }, { "tripSeq": 8, "arrival_delay": -28, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:27:32.000Z", "ArrivalTimeOffset": 467, "stop_lat": " -27.558250", "stop_lon": " 153.066747" }, { "tripSeq": 8, "arrival_delay": -44, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:29:16.000Z", "ArrivalTimeOffset": 571, "stop_lat": " -27.564688", "stop_lon": " 153.065564" }, { "tripSeq": 8, "arrival_delay": -53, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:31:07.000Z", "ArrivalTimeOffset": 682, "stop_lat": " -27.570468", "stop_lon": " 153.064526" }, { "tripSeq": 8, "arrival_delay": 19, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:33:19.000Z", "ArrivalTimeOffset": 814, "stop_lat": " -27.576117", "stop_lon": " 153.063379" }, { "tripSeq": 8, "arrival_delay": -82, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:34:38.000Z", "ArrivalTimeOffset": 893, "stop_lat": " -27.582545", "stop_lon": " 153.062231" }, { "tripSeq": 8, "arrival_delay": 5, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:37:05.000Z", "ArrivalTimeOffset": 1040, "stop_lat": " -27.590722", "stop_lon": " 153.060243" }, { "tripSeq": 8, "arrival_delay": 10, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:39:10.000Z", "ArrivalTimeOffset": 1165, "stop_lat": " -27.600430", "stop_lon": " 153.058483" }, { "tripSeq": 8, "arrival_delay": -23, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:39:37.000Z", "ArrivalTimeOffset": 1192, "stop_lat": " -27.602486", "stop_lon": " 153.056824" }, { "tripSeq": 8, "arrival_delay": -41, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:41:19.000Z", "ArrivalTimeOffset": 1294, "stop_lat": " -27.609832", "stop_lon": " 153.054757" }, { "tripSeq": 8, "arrival_delay": 24, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:45:24.000Z", "ArrivalTimeOffset": 1539, "stop_lat": " -27.605887", "stop_lon": " 153.042769" }, { "tripSeq": 8, "arrival_delay": -31, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:46:29.000Z", "ArrivalTimeOffset": 1604, "stop_lat": " -27.612113", "stop_lon": " 153.040740" }, { "tripSeq": 8, "arrival_delay": -48, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:48:12.000Z", "ArrivalTimeOffset": 1707, "stop_lat": " -27.611357", "stop_lon": " 153.033291" }, { "tripSeq": 8, "arrival_delay": -94, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:49:26.000Z", "ArrivalTimeOffset": 1781, "stop_lat": " -27.617570", "stop_lon": " 153.028867" }, { "tripSeq": 8, "arrival_delay": -126, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:51:54.000Z", "ArrivalTimeOffset": 1929, "stop_lat": " -27.628854", "stop_lon": " 153.029152" }, { "tripSeq": 8, "arrival_delay": -156, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:52:24.000Z", "ArrivalTimeOffset": 1959, "stop_lat": " -27.631681", "stop_lon": " 153.029532" }, { "tripSeq": 8, "arrival_delay": -160, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:53:20.000Z", "ArrivalTimeOffset": 2015, "stop_lat": " -27.636898", "stop_lon": " 153.030696" }, { "tripSeq": 8, "arrival_delay": -185, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:53:55.000Z", "ArrivalTimeOffset": 2050, "stop_lat": " -27.638507", "stop_lon": " 153.034434" }, { "tripSeq": 8, "arrival_delay": -265, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:54:35.000Z", "ArrivalTimeOffset": 2090, "stop_lat": " -27.638567", "stop_lon": " 153.040471" }, { "tripSeq": 8, "arrival_delay": -233, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:55:07.000Z", "ArrivalTimeOffset": 2122, "stop_lat": " -27.638164", "stop_lon": " 153.043837" }, { "tripSeq": 8, "arrival_delay": -258, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:56:42.000Z", "ArrivalTimeOffset": 2217, "stop_lat": " -27.638974", "stop_lon": " 153.049022" }, { "tripSeq": 8, "arrival_delay": -284, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:57:16.000Z", "ArrivalTimeOffset": 2251, "stop_lat": null, "stop_lon": null }, { "tripSeq": 9, "arrival_delay": 118, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:17:58.000Z", "ArrivalTimeOffset": -107, "stop_lat": " -27.632307", "stop_lon": " 153.029360" }, { "tripSeq": 9, "arrival_delay": 106, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:18:46.000Z", "ArrivalTimeOffset": -59, "stop_lat": " -27.628120", "stop_lon": " 153.028891" }, { "tripSeq": 9, "arrival_delay": 118, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:19:58.000Z", "ArrivalTimeOffset": 13, "stop_lat": " -27.624333", "stop_lon": " 153.027342" }, { "tripSeq": 9, "arrival_delay": 138, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:21:18.000Z", "ArrivalTimeOffset": 93, "stop_lat": " -27.615999", "stop_lon": " 153.029315" }, { "tripSeq": 9, "arrival_delay": 88, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:22:28.000Z", "ArrivalTimeOffset": 163, "stop_lat": " -27.611244", "stop_lon": " 153.033153" }, { "tripSeq": 9, "arrival_delay": 126, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:24:06.000Z", "ArrivalTimeOffset": 261, "stop_lat": " -27.612700", "stop_lon": " 153.039798" }, { "tripSeq": 9, "arrival_delay": 152, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:25:32.000Z", "ArrivalTimeOffset": 347, "stop_lat": " -27.605545", "stop_lon": " 153.042668" }, { "tripSeq": 9, "arrival_delay": 92, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:28:32.000Z", "ArrivalTimeOffset": 527, "stop_lat": " -27.610461", "stop_lon": " 153.054307" }, { "tripSeq": 9, "arrival_delay": 89, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:30:29.000Z", "ArrivalTimeOffset": 644, "stop_lat": " -27.602326", "stop_lon": " 153.056555" }, { "tripSeq": 9, "arrival_delay": 125, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:32:05.000Z", "ArrivalTimeOffset": 740, "stop_lat": " -27.598716", "stop_lon": " 153.058494" }, { "tripSeq": 9, "arrival_delay": 80, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:34:20.000Z", "ArrivalTimeOffset": 875, "stop_lat": " -27.588496", "stop_lon": " 153.060354" }, { "tripSeq": 9, "arrival_delay": -7, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:35:53.000Z", "ArrivalTimeOffset": 968, "stop_lat": " -27.581746", "stop_lon": " 153.062056" }, { "tripSeq": 9, "arrival_delay": 29, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:37:29.000Z", "ArrivalTimeOffset": 1064, "stop_lat": " -27.576300", "stop_lon": " 153.063015" }, { "tripSeq": 9, "arrival_delay": 49, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:39:49.000Z", "ArrivalTimeOffset": 1204, "stop_lat": " -27.570168", "stop_lon": " 153.064236" }, { "tripSeq": 9, "arrival_delay": 108, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:41:48.000Z", "ArrivalTimeOffset": 1323, "stop_lat": " -27.564220", "stop_lon": " 153.065322" }, { "tripSeq": 9, "arrival_delay": 81, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:43:21.000Z", "ArrivalTimeOffset": 1416, "stop_lat": " -27.559553", "stop_lon": " 153.066142" }, { "tripSeq": 9, "arrival_delay": 10, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:47:10.000Z", "ArrivalTimeOffset": 1645, "stop_lat": " -27.546550", "stop_lon": " 153.064253" }, { "tripSeq": 9, "arrival_delay": -71, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:54:49.000Z", "ArrivalTimeOffset": 2104, "stop_lat": " -27.484505", "stop_lon": " 153.028213" }, { "tripSeq": 9, "arrival_delay": -110, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:56:10.000Z", "ArrivalTimeOffset": 2185, "stop_lat": " -27.480721", "stop_lon": " 153.021835" }, { "tripSeq": 9, "arrival_delay": -56, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:59:04.000Z", "ArrivalTimeOffset": 2359, "stop_lat": " -27.473232", "stop_lon": " 153.019415" }, { "tripSeq": 9, "arrival_delay": -172, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T15:01:08.000Z", "ArrivalTimeOffset": 2483, "stop_lat": " -27.470717", "stop_lon": " 153.023825" }, { "tripSeq": 10, "arrival_delay": -1, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:25:00.000Z", "ArrivalTimeOffset": 315, "stop_lat": " -27.470675", "stop_lon": " 153.024755" }, { "tripSeq": 10, "arrival_delay": 12, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:27:12.000Z", "ArrivalTimeOffset": 447, "stop_lat": " -27.473642", "stop_lon": " 153.018915" }, { "tripSeq": 10, "arrival_delay": 28, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:29:28.000Z", "ArrivalTimeOffset": 583, "stop_lat": " -27.481023", "stop_lon": " 153.022209" }, { "tripSeq": 10, "arrival_delay": -3, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:30:57.000Z", "ArrivalTimeOffset": 672, "stop_lat": " -27.484413", "stop_lon": " 153.028393" }, { "tripSeq": 10, "arrival_delay": -14, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:38:46.000Z", "ArrivalTimeOffset": 1141, "stop_lat": " -27.546738", "stop_lon": " 153.064682" }, { "tripSeq": 10, "arrival_delay": -72, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:41:48.000Z", "ArrivalTimeOffset": 1323, "stop_lat": " -27.558250", "stop_lon": " 153.066747" }, { "tripSeq": 10, "arrival_delay": -88, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:43:32.000Z", "ArrivalTimeOffset": 1427, "stop_lat": " -27.564688", "stop_lon": " 153.065564" }, { "tripSeq": 10, "arrival_delay": -97, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:45:23.000Z", "ArrivalTimeOffset": 1538, "stop_lat": " -27.570468", "stop_lon": " 153.064526" }, { "tripSeq": 10, "arrival_delay": -25, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:47:35.000Z", "ArrivalTimeOffset": 1670, "stop_lat": " -27.576117", "stop_lon": " 153.063379" }, { "tripSeq": 10, "arrival_delay": -126, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:48:54.000Z", "ArrivalTimeOffset": 1749, "stop_lat": " -27.582545", "stop_lon": " 153.062231" }, { "tripSeq": 10, "arrival_delay": -39, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:51:21.000Z", "ArrivalTimeOffset": 1896, "stop_lat": " -27.590722", "stop_lon": " 153.060243" }, { "tripSeq": 10, "arrival_delay": -34, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:53:26.000Z", "ArrivalTimeOffset": 2021, "stop_lat": " -27.600430", "stop_lon": " 153.058483" }, { "tripSeq": 10, "arrival_delay": -67, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:53:53.000Z", "ArrivalTimeOffset": 2048, "stop_lat": " -27.602486", "stop_lon": " 153.056824" }, { "tripSeq": 10, "arrival_delay": -85, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:55:35.000Z", "ArrivalTimeOffset": 2150, "stop_lat": " -27.609832", "stop_lon": " 153.054757" }, { "tripSeq": 10, "arrival_delay": -20, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T14:59:40.000Z", "ArrivalTimeOffset": 2395, "stop_lat": " -27.605887", "stop_lon": " 153.042769" }, { "tripSeq": 10, "arrival_delay": -75, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T15:00:45.000Z", "ArrivalTimeOffset": 2460, "stop_lat": " -27.612113", "stop_lon": " 153.040740" }, { "tripSeq": 10, "arrival_delay": -92, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T15:02:28.000Z", "ArrivalTimeOffset": 2563, "stop_lat": " -27.611357", "stop_lon": " 153.033291" }, { "tripSeq": 10, "arrival_delay": -138, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T15:03:42.000Z", "ArrivalTimeOffset": 2637, "stop_lat": " -27.617570", "stop_lon": " 153.028867" }, { "tripSeq": 10, "arrival_delay": -170, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T15:06:10.000Z", "ArrivalTimeOffset": 2785, "stop_lat": " -27.628854", "stop_lon": " 153.029152" }, { "tripSeq": 10, "arrival_delay": -200, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T15:06:40.000Z", "ArrivalTimeOffset": 2815, "stop_lat": " -27.631681", "stop_lon": " 153.029532" }, { "tripSeq": 10, "arrival_delay": -204, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T15:07:36.000Z", "ArrivalTimeOffset": 2871, "stop_lat": " -27.636898", "stop_lon": " 153.030696" }, { "tripSeq": 10, "arrival_delay": -229, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T15:08:11.000Z", "ArrivalTimeOffset": 2906, "stop_lat": " -27.638507", "stop_lon": " 153.034434" }, { "tripSeq": 10, "arrival_delay": -309, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T15:08:51.000Z", "ArrivalTimeOffset": 2946, "stop_lat": " -27.638567", "stop_lon": " 153.040471" }, { "tripSeq": 10, "arrival_delay": -277, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T15:09:23.000Z", "ArrivalTimeOffset": 2978, "stop_lat": " -27.638164", "stop_lon": " 153.043837" }, { "tripSeq": 10, "arrival_delay": -302, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T15:10:58.000Z", "ArrivalTimeOffset": 3073, "stop_lat": " -27.638974", "stop_lon": " 153.049022" }, { "tripSeq": 10, "arrival_delay": -328, "RouteNo": "130", "Direction": "Outbound", "Arrival_Time": "2015-07-04T15:11:32.000Z", "ArrivalTimeOffset": 3107, "stop_lat": null, "stop_lon": null }, { "tripSeq": 11, "arrival_delay": -1, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:27:00.000Z", "ArrivalTimeOffset": 435, "stop_lat": " -27.639575", "stop_lon": " 153.052317" }, { "tripSeq": 11, "arrival_delay": 39, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:27:39.000Z", "ArrivalTimeOffset": 474, "stop_lat": " -27.639030", "stop_lon": " 153.048514" }, { "tripSeq": 11, "arrival_delay": 57, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:28:57.000Z", "ArrivalTimeOffset": 552, "stop_lat": " -27.638364", "stop_lon": " 153.043654" }, { "tripSeq": 11, "arrival_delay": 22, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:29:22.000Z", "ArrivalTimeOffset": 577, "stop_lat": " -27.638737", "stop_lon": " 153.040656" }, { "tripSeq": 11, "arrival_delay": 9, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:30:09.000Z", "ArrivalTimeOffset": 624, "stop_lat": " -27.638527", "stop_lon": " 153.033753" }, { "tripSeq": 11, "arrival_delay": 7, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:31:07.000Z", "ArrivalTimeOffset": 682, "stop_lat": " -27.635390", "stop_lon": " 153.029342" }, { "tripSeq": 11, "arrival_delay": 41, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:31:41.000Z", "ArrivalTimeOffset": 716, "stop_lat": " -27.632307", "stop_lon": " 153.029360" }, { "tripSeq": 11, "arrival_delay": 30, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:32:30.000Z", "ArrivalTimeOffset": 765, "stop_lat": " -27.628120", "stop_lon": " 153.028891" }, { "tripSeq": 11, "arrival_delay": 41, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:33:41.000Z", "ArrivalTimeOffset": 836, "stop_lat": " -27.624333", "stop_lon": " 153.027342" }, { "tripSeq": 11, "arrival_delay": 62, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:35:02.000Z", "ArrivalTimeOffset": 917, "stop_lat": " -27.615999", "stop_lon": " 153.029315" }, { "tripSeq": 11, "arrival_delay": 11, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:36:11.000Z", "ArrivalTimeOffset": 986, "stop_lat": " -27.611244", "stop_lon": " 153.033153" }, { "tripSeq": 11, "arrival_delay": 50, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:37:50.000Z", "ArrivalTimeOffset": 1085, "stop_lat": " -27.612700", "stop_lon": " 153.039798" }, { "tripSeq": 11, "arrival_delay": 76, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:39:16.000Z", "ArrivalTimeOffset": 1171, "stop_lat": " -27.605545", "stop_lon": " 153.042668" }, { "tripSeq": 11, "arrival_delay": 16, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:42:16.000Z", "ArrivalTimeOffset": 1351, "stop_lat": " -27.610461", "stop_lon": " 153.054307" }, { "tripSeq": 11, "arrival_delay": 12, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:44:12.000Z", "ArrivalTimeOffset": 1467, "stop_lat": " -27.602326", "stop_lon": " 153.056555" }, { "tripSeq": 11, "arrival_delay": 49, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:45:49.000Z", "ArrivalTimeOffset": 1564, "stop_lat": " -27.598716", "stop_lon": " 153.058494" }, { "tripSeq": 11, "arrival_delay": 4, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:48:04.000Z", "ArrivalTimeOffset": 1699, "stop_lat": " -27.588496", "stop_lon": " 153.060354" }, { "tripSeq": 11, "arrival_delay": -83, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:49:37.000Z", "ArrivalTimeOffset": 1792, "stop_lat": " -27.581746", "stop_lon": " 153.062056" }, { "tripSeq": 11, "arrival_delay": -47, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:51:13.000Z", "ArrivalTimeOffset": 1888, "stop_lat": " -27.576300", "stop_lon": " 153.063015" }, { "tripSeq": 11, "arrival_delay": -27, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:53:33.000Z", "ArrivalTimeOffset": 2028, "stop_lat": " -27.570168", "stop_lon": " 153.064236" }, { "tripSeq": 11, "arrival_delay": 32, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:55:32.000Z", "ArrivalTimeOffset": 2147, "stop_lat": " -27.564220", "stop_lon": " 153.065322" }, { "tripSeq": 11, "arrival_delay": 5, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T14:57:05.000Z", "ArrivalTimeOffset": 2240, "stop_lat": " -27.559553", "stop_lon": " 153.066142" }, { "tripSeq": 11, "arrival_delay": -66, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T15:00:54.000Z", "ArrivalTimeOffset": 2469, "stop_lat": " -27.546550", "stop_lon": " 153.064253" }, { "tripSeq": 11, "arrival_delay": -147, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T15:08:33.000Z", "ArrivalTimeOffset": 2928, "stop_lat": " -27.484505", "stop_lon": " 153.028213" }, { "tripSeq": 11, "arrival_delay": -187, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T15:09:53.000Z", "ArrivalTimeOffset": 3008, "stop_lat": " -27.480721", "stop_lon": " 153.021835" }, { "tripSeq": 11, "arrival_delay": -133, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T15:12:47.000Z", "ArrivalTimeOffset": 3182, "stop_lat": " -27.473232", "stop_lon": " 153.019415" }, { "tripSeq": 11, "arrival_delay": -133, "RouteNo": "130", "Direction": "Inbound", "Arrival_Time": "2015-07-04T15:16:47.000Z", "ArrivalTimeOffset": 3422, "stop_lat": " -27.470717", "stop_lon": " 153.023825" }]';
+       
+
+
+        function initialize() {
+            //busList = ['100', '123','102', '120','130', '139','412'];
+            busList = [];
+            var mapOptions = {
+                center: new google.maps.LatLng(-27.4709331, 153.023502399),
+                zoom: 12,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            map = new google.maps.Map(document.getElementById('map-canvas'),
+              mapOptions);
+            $('#timeLabel').html('');
+
+            // init array for each bus
+            busList.forEach(function (item) {
+                poly2.push(new google.maps.Polyline({
+                    path: [],
+                    strokeColor: '#0000FF',
+                    strokeWeight: 1
+                }));
+
+                distances.push(50);
+                //lastVertex.push(1);
+            });
+
+            busList.forEach(function (bus) {
+                getRouteByBusNumber(bus);
+            });
+
+            var progBar = $("#progBar");
+            progBar.hide();
+        }
+
+        function playBus(busNumber) {
+            var progBar = $("#progBar");
+            progBar.show();
+            var index = busList.indexOf(busNumber);
+            if (index === -1) {
+                busList.push(busNumber);
+            } else {
+                busList.splice(index, 1);
+            }
+            // reinit 
+            poly2 = [];
+            distances = [];
+            routeLine = [];
+            routeTimetable = [];
+            tickCount = 0;
+
+            // init array for each bus
+            busList.forEach(function (item) {
+                poly2.push(new google.maps.Polyline({
+                    path: [],
+                    strokeColor: '#0000FF',
+                    strokeWeight: 1
+                }));
+
+                distances.push(50);
+                //lastVertex.push(1);
+            });
+
+            busList.forEach(function (bus) {
+                getRouteByBusNumber(bus);
+            });
+        }
+
+        function getRouteByBusNumber(busNumber) {
+            var client = new WindowsAzure.MobileServiceClient(
+                "[url]",
+                "[key]"
+            );
+
+            var routeShape = client.getTable('tripshape');
+
+            var query = routeShape
+                .read({
+                    routeID: busNumber,
+                    currentTime: '20:55:46',
+                    direction:'1'
+                }).done(function (results) {
+                    //alert(JSON.stringify(results));
+                    var routeArray = JSON.parse( JSON.stringify(results) );
+                    //alert(JSON.stringify(routeArray[0]));
+
+                    var routeCoordinates = [];
+                    routeArray.forEach(function (item) {
+                            routeCoordinates.push(new google.maps.LatLng(item.la, item.lo));
+                    });
+                    var routeCoordinates2 = routeCoordinates.slice(0);
+
+                    var polyOut = new google.maps.Polyline({
+                        path: routeCoordinates,
+                        strokeColor: '#000000',
+                        strokeWeight: 1,
+                        map: map
+                    });
+                    var polyIn = new google.maps.Polyline({
+                        path: routeCoordinates2.reverse(),
+                        strokeColor: '#000000',
+                        strokeWeight: 1,
+                        map: map
+                    });
+                    routeLine.push({ inbound: polyIn, outbound: polyOut, busNumber: busNumber });
+
+                    // init the eol and timelineFrom for later processing
+                    eol.push(polyIn.Distance());
+
+                    // for testing only
+                    //if (busNumber === '130') {
+                    //    //alert(poly1.Contains(new google.maps.LatLng(-27.576300, 153.063015)));
+                    //    alert(poly1.GetIndexByPosition(new google.maps.LatLng(-27.576300, 153.063015)));
+                    //}
+                   getTimetableByBusNumber(busNumber);
+                    //getTimetableByBusNumberMock(busNumber);
+
+            }, function (err) {
+                alert("Error: " + err);
+            });
+        }
+
+
+        function getTimetableByBusNumber(busNumber) {
+            var client = new WindowsAzure.MobileServiceClient(
+                "[url]",
+                "key"
+            );
+            var routeShape = client.getTable('realtimetrip');
+            var busIndex = busList.indexOf(busNumber);
+            var query = routeShape
+                .read({
+                    busNumber: busNumber
+                }).done(function (results) {
+                    var ttArray = JSON.parse(JSON.stringify(results));
+                    //routeTimetable.push({busNumber:busNumber, tt:ttArray});
+                    //alert(JSON.stringify(routeTimetable[routeTimetable.length - 1]));
+                    var sortedTT = groupBy(ttArray, function (item) {
+                        return [item.tripSeq];
+                    });
+                 
+                    var index = 0;
+                    var routeLocs = [];
+                    var busMarker = [];
+                    sortedTT.forEach(function (items) {
+                        var lowest = 0;
+                        var highest = items.length - 1;
+                        if (items[0].stop_lat && items[0].stop_lat === 0 && items.length > 1) {
+                            lowest = 1;
+                            highest = 1;
+                        }
+                        for (var i = 1; i < items.length; i++) {
+                            if (items[i].ArrivalTimeOffset < items[lowest].ArrivalTimeOffset && items[i].stop_lat && items[i].stop_lat !== 0) lowest = i;
+                            if (items[i].ArrivalTimeOffset > items[highest].ArrivalTimeOffset && items[i].stop_lat && items[i].stop_lat !== 0 && items[i].ArrivalTimeOffset < 60) highest = i;
+                        }
+
+                        var lowestItem = items[lowest];
+                        var highestItem = items[highest];
+                        var startTimeOffset = lowestItem.ArrivalTimeOffset;
+                        var endTimeOffset = highestItem.ArrivalTimeOffset;
+                        var fallintoWindow = startTimeOffset < 0 && endTimeOffset > -1 * maxTick * speedRatio / 10;
+
+                        if (fallintoWindow) {
+                            var startPosition = new google.maps.LatLng(lowestItem.stop_lat, lowestItem.stop_lon);
+                            var endPosition = new google.maps.LatLng(highestItem.stop_lat, highestItem.stop_lon);
+
+                            // populate the key properites for a trip
+                            var startTick = maxTick - parseInt(Math.abs(startTimeOffset * 10 / speedRatio));
+                            var endTick = endTimeOffset > 0 ? maxTick : maxTick - parseInt(Math.abs(endTimeOffset * 10 / speedRatio));
+                            if (endTick < 0 || endTick < startTick) endTick = startTick + 1;
+
+
+                            var tripLine = lowestItem.Direction === 'Inbound' ? routeLine[busIndex].inbound : routeLine[busIndex].outbound;
+                            var highestStopSeq = items[items.length - 1].stopSeq;
+                            var numberOfIndexPerStop = parseInt( tripLine.getPath().length / highestStopSeq);
+
+                            var startIndex = lowestItem.stopSeq * numberOfIndexPerStop; //tripLine.GetIndexByPosition(startPosition);
+                            var endIndex = highestItem.stopSeq * numberOfIndexPerStop; //tripLine.GetIndexByPosition(endPosition);
+
+                            if (startTick > 0 && startIndex > numberOfIndexPerStop) {
+                                startTick = 0;
+                                startIndex = 0;
+                            }
+
+                            distances[index] = tripLine.DistanceFrom(startIndex);
+                            //alert(distances[index]);
+
+                            var iconPath = "../../Images/greenBus24.png";
+                            var perf = 0; //on time
+                            var delaySeconds = lowestItem.arrival_delay / 2 + highestItem.arrival_delay / 2;
+                            if (delaySeconds < -60) // early
+                            {
+                                iconPath = "../../Images/blueBus24.png";
+                                perf = 1;
+                            }
+                            else if (delaySeconds > 60) //late
+                            {
+                                iconPath = "../../Images/redBus24.png";
+                                perf = 2;
+                            }
+                            busMarker.push( new google.maps.Marker({
+                                location: tripLine.getPath().getAt(0),
+                                map: map,
+                                title: '',
+                                icon: iconPath
+                            }));
+
+                            routeLocs.push({perf:perf, from: startIndex, to: endIndex, startTick: startTick, endTick: endTick, direction: lowestItem.Direction, index: index });
+                            index++;
+                        }
+
+
+                    });
+                    //alert(JSON.stringify(routeLocs));
+                    routeTimetable.push({ busNumber: busNumber, tt: sortedTT, locs: routeLocs, busMarker: busMarker });
+
+                    if (routeLine.length === routeTimetable.length)
+                        startAnimation();
+
+                }, function (err) {
+                    alert("Error: " + err);
+                });
+        }
+
+        //=============== animation functions ======================
+        function startAnimation() {
+
+            if (timerHandle) clearInterval(timerHandle);
+            
+            var bounds = new google.maps.LatLngBounds();
+
+            var index = 0;
+            routeLine.forEach(function (lineItem) {
+
+                //set start and end
+                setStartEndMarker(true, lineItem.inbound.getPath().getAt(0), busList[index]);
+                setStartEndMarker(false, lineItem.inbound.getPath().getAt(lineItem.inbound.getPath().getLength() - 1), busList[index]);
+
+                bounds.extend(lineItem.inbound.getPath().getAt(0));
+                bounds.extend(lineItem.inbound.getPath().getAt(lineItem.inbound.getPath().getLength() - 1));
+
+                index++;
+            });
+            
+
+            map.fitBounds(bounds);
+            setTimeout("animate()", 2000);  // Allow time for the initial map display
+
+            //stats
+            var statsContent ="";
+            var greenBusContent ="<img class=\"img-responsive pull-left\"  src=\"/Images/greenBus24.png\">";
+            var blueBusContent ="<img class=\"img-responsive pull-left\"  src=\"/Images/blueBus24.png\">";
+            var redBusContent ="<img class=\"img-responsive pull-left\"  src=\"/Images/redBus24.png\">";
+            busList.forEach(function (bus) {
+                statsContent += "<div class=\"col-lg-12 col-md-12\"><div><h4>" + bus + "</h4></div></div>";
+                var inboundContent = "<div class=\" col-lg-12 col-md-12\"><div class=\"col-lg-4 col-sm-4 text-left\"><h5>Inbound</h5></div><div class=\"col-lg-8 col-sm-8\">";
+                var outboundContent = "<div class=\" col-lg-12 col-md-12\"><div class=\"col-lg-4 col-sm-4 text-left\"><h5>Outbound</h5></div><div class=\"col-lg-8 col-sm-8\">";
+                var busIndex = busList.indexOf(bus);
+                var lines = routeTimetable[busIndex].locs;
+                lines.forEach(function (busTrip) {
+                    if (busTrip.direction === 'Inbound') {
+                        if(busTrip.perf === 0)
+                            inboundContent += greenBusContent;
+                        else if(busTrip.perf === 1)
+                            inboundContent += blueBusContent;
+                        else if(busTrip.perf === 2)
+                            inboundContent += redBusContent;
+                    } else {
+                        if (busTrip.perf === 0)
+                            outboundContent += greenBusContent;
+                        else if (busTrip.perf === 1)
+                            outboundContent += blueBusContent;
+                        else if (busTrip.perf === 2)
+                            outboundContent += redBusContent;
+                    }
+                });
+                inboundContent += "</div></div>";
+                outboundContent += "</div></div>";
+                statsContent += inboundContent + outboundContent;
+            });
+            $('#statLabel').html(statsContent);
+        }
+
+        function setStartEndMarker(isStart, pos, bus) {
+            var m = new google.maps.Marker({
+                position: pos,
+                map: map,
+                title: bus
+            });
+            if (isStart)
+                m.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+            else
+                m.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+        }
+
+        function animate() {
+            routeLine.forEach(function (lineItem) {
+                var busIndex = busList.indexOf(lineItem.busNumber);
+
+                    //for each bus trip for this route
+                var lines = routeTimetable[busIndex].locs;
+                var busMarkers = routeTimetable[busIndex].busMarker;
+                    lines.forEach(function (busTrip) {
+                        var tripLine = busTrip.direction === 'Inbound' ? lineItem.inbound : lineItem.outbound;
+                        if (tickCount >= busTrip.startTick && tickCount <= busTrip.endTick) //should the bus route start?
+                        {
+                            if (distances[busTrip.index] > eol[busIndex]) {
+                                var endlocation = tripLine.getPath().getAt(tripLine.getPath().getLength() - 1);
+                                //if (busIndex === distances.length)
+                                //    map.panTo(endlocation);
+                                busMarkers[busTrip.index].setPosition(endlocation);
+                            } else {
+                                var p = tripLine.GetPointAtDistance(distances[busTrip.index]);
+                                busMarkers[busTrip.index].setPosition(p);
+                                // not working....
+                                //updatePoly(index);
+                                distances[busTrip.index] = distances[busTrip.index] + step;
+                            }
+                        }
+                    });
+            });
+
+            tickCount++;
+            updateProgress();
+
+            if (tickCount <= maxTick)
+                timerHandle = setTimeout("animate()", tick);
+        }
+
+        function play() {
+            var selText = $('#busList li a.active').text();
+            if(!selText)
+                alert('please choose a bus');
+            else {
+                $('#timeLabel').html("loading ....");
+                playBus(selText);
+            }
+        }
+
+        function playNormal() {
+            tick = 100;
+            play();
+        }
+        function playFast() {
+            tick = 25;
+            play();
+        }
+        function updateProgress()
+        {
+            var percent = parseInt((tickCount / maxTick) * 100);
+            var progBar = $("#progBar");
+            progBar.val(percent);
+
+            var timeOffset = parseInt(15 * 50 * 1000 * (1- tickCount / maxTick));
+            var today = new Date();
+            var fifteenMinsAgo = new Date(today.getTime() - timeOffset);
+            var h = fifteenMinsAgo.getHours();
+            var m = fifteenMinsAgo.getMinutes();
+            var s = fifteenMinsAgo.getSeconds();
+            // add a zero in front of numbers<10
+            m = checkTime(m);
+            s = checkTime(s);
+            $('#timeLabel').html( h + ":" + m + ":" + s);
+        }
+
+        function checkTime(i) {
+            if (i < 10) {
+                i = "0" + i;
+            }
+            return i;
+        }
+        function groupBy(array, f) {
+            var groups = {};
+            array.forEach(function (o) {
+                var group = JSON.stringify(f(o));
+                groups[group] = groups[group] || [];
+                groups[group].push(o);
+            });
+            return Object.keys(groups).map(function (group) {
+                return groups[group];
+            })
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+</script>
+<div class="jumbotron">
+
+    <div class="box">
+
+        <div class="container">
+            <div class="col-lg-12 col-md-12">
+                <div class="col-lg-9 col-md-9" id="map-canvas"></div>
+                <div class="col-lg-3 col-md-3 container">
+
+                    <!--action buttons-->
+                    <div class="row col-lg-12 col-md-12" style="padding-top: 5px;">
+                        <div class="dropdown col-lg-6 col-md-6">
+                            <button id="busListBtn" class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                                Pick a bus
+                                <span class="caret"></span>
+                            </button>
+                            <ul id="busList" class="dropdown-menu">
+                                <li><a href="#">100</a></li>
+                                <li><a href="#">101</a></li>
+                                <li><a href="#">102</a></li>
+                                <li><a href="#">103</a></li>
+                                <li><a href="#">104</a></li>
+                                <li><a href="#">105</a></li>
+                                <li><a href="#">106</a></li>
+                                <li><a href="#">107</a></li>
+                                <li><a href="#">108</a></li>
+                                <li><a href="#">110</a></li>
+                                <li><a href="#">111</a></li>
+                                <li><a href="#">112</a></li>
+                                <li><a href="#">113</a></li>
+                                <li><a href="#">114</a></li>
+                                <li><a href="#">115</a></li>
+                                <li><a href="#">116</a></li>
+                                <li><a href="#">117</a></li>
+                                <li><a href="#">118</a></li>
+                                <li><a href="#">120</a></li>
+                                <li><a href="#">121</a></li>
+                                <li><a href="#">122</a></li>
+                                <li><a href="#">122</a></li>
+                                <li><a href="#">123</a></li>
+                                <li><a href="#">124</a></li>
+                                <li><a href="#">125</a></li>
+                                <li><a href="#">126</a></li>
+                                <li><a href="#">130</a></li>
+                                <li><a href="#">131</a></li>
+                                <li><a href="#">132</a></li>
+                                <li><a href="#">134</a></li>
+                                <li><a href="#">135</a></li>
+                                <li><a href="#">136</a></li>
+                                <li><a href="#">138</a></li>
+                                <li><a href="#">139</a></li>
+                                <li><a href="#">140</a></li>
+                                <li><a href="#">145</a></li>
+                                <li><a href="#">150</a></li>
+                                <li><a href="#">152</a></li>
+                                <li><a href="#">153</a></li>
+                                <li><a href="#">155</a></li>
+                                <li><a href="#">156</a></li>
+                                <li><a href="#">160</a></li>
+                                <li><a href="#">161</a></li>
+                                <li><a href="#">162</a></li>
+                                <li><a href="#">169</a></li>
+                                <li><a href="#">170</a></li>
+                                <li><a href="#">171</a></li>
+                                <li><a href="#">172</a></li>
+                                <li><a href="#">174</a></li>
+                                <li><a href="#">175</a></li>
+                                <li><a href="#">177</a></li>
+                                <li><a href="#">178</a></li>
+                                <li><a href="#">180</a></li>
+                                <li><a href="#">181</a></li>
+                                <li><a href="#">184</a></li>
+                                <li><a href="#">185</a></li>
+                                <li><a href="#">186</a></li>
+                                <li><a href="#">192</a></li>
+                                <li><a href="#">195</a></li>
+                                <li><a href="#">196</a></li>
+                                <li><a href="#">198</a></li>
+                                <li><a href="#">199</a></li>
+                                <li><a href="#">200</a></li>
+                                <li><a href="#">202</a></li>
+                                <li><a href="#">203</a></li>
+                                <li><a href="#">204</a></li>
+                                <li><a href="#">209</a></li>
+                                <li><a href="#">210</a></li>
+                                <li><a href="#">212</a></li>
+                                <li><a href="#">213</a></li>
+                                <li><a href="#">214</a></li>
+                                <li><a href="#">215</a></li>
+                                <li><a href="#">220</a></li>
+                                <li><a href="#">222</a></li>
+                                <li><a href="#">223</a></li>
+                                <li><a href="#">224</a></li>
+                                <li><a href="#">225</a></li>
+                                <li><a href="#">227</a></li>
+                                <li><a href="#">230</a></li>
+                                <li><a href="#">232</a></li>
+                                <li><a href="#">234</a></li>
+                                <li><a href="#">235</a></li>
+                                <li><a href="#">240</a></li>
+                                <li><a href="#">242</a></li>
+                                <li><a href="#">243</a></li>
+                                <li><a href="#">250</a></li>
+                                <li><a href="#">251</a></li>
+                                <li><a href="#">252</a></li>
+                                <li><a href="#">253</a></li>
+                                <li><a href="#">254</a></li>
+                                <li><a href="#">255</a></li>
+                                <li><a href="#">258</a></li>
+                                <li><a href="#">260</a></li>
+                                <li><a href="#">261</a></li>
+                                <li><a href="#">262</a></li>
+                                <li><a href="#">263</a></li>
+                                <li><a href="#">264</a></li>
+                                <li><a href="#">265</a></li>
+                                <li><a href="#">266</a></li>
+                                <li><a href="#">267</a></li>
+                                <li><a href="#">270</a></li>
+                                <li><a href="#">272</a></li>
+                                <li><a href="#">273</a></li>
+                                <li><a href="#">274</a></li>
+                                <li><a href="#">275</a></li>
+                                <li><a href="#">276</a></li>
+                                <li><a href="#">277</a></li>
+                                <li><a href="#">279</a></li>
+                                <li><a href="#">280</a></li>
+                                <li><a href="#">281</a></li>
+                                <li><a href="#">282</a></li>
+                                <li><a href="#">29</a></li>
+                                <li><a href="#">299</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <button type="button" class="btn btn-primary" onclick="playNormal();">Play</button>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <button type="button" class="btn btn-primary" onclick="playFast();">Fast</button>
+                        </div>
+                    </div>
+                    <!--progress bar-->
+                    <div class="row col-lg-12 col-md-12" style="display:block;padding-top: 5px;">
+                        <div class="small info col-lg-12 col-md-12">
+                            Choose a bus and replay the bus trip for previous 15 minutes
+                        </div>
+                    </div>
+                    <div id="timeLabel" class="row lead col-lg-12 col-md-12" style="padding-top: 15px;padding-left: 30px; padding-bottom:0px;">
+
+                    </div>
+                    <div class="row col-lg-12 col-md-12">
+                        <div class="col-lg-8 col-md-8">
+                            <progress id="progBar" value="1" max="100"></progress>
+                        </div>
+                    </div>
+
+                    <!-- stats-->
+                    <div >
+                         <div class=" col-lg-12 col-md-12">
+                             <hr />
+                             <div>
+                                <h4>Statistics</h4>
+                            </div>
+                        </div>
+                        <div id="statLabel">
+                        </div>
+
+                    </div>
+                    <!-- icons-->
+                    <div >
+                        <div class="row col-lg-12 col-md-12">
+                            <hr />
+                        </div>
+                        <div class="row col-lg-12 col-md-12">
+                            <div class="col-lg-3 col-sm-3">
+                                <img class="img-responsive" id="greenBus" src="~/Images/greenBus24.png" usemap="#imageMap">
+                            </div>
+                            <div class="col-lg-9 col-sm-9">
+                                Bus is on time
+                            </div>
+                        </div>
+                        <div class="row col-lg-12 col-md-12">
+                            <div class="col-lg-3 col-sm-3">
+                                <img class="img-responsive" id="redBus" src="~/Images/redBus24.png" usemap="#imageMap">
+                            </div>
+                            <div class="col-lg-9 col-sm-9">
+                                Bus is late
+                            </div>
+                        </div>
+                        <div class="row col-lg-12 col-md-12">
+                            <div class="col-lg-3 col-sm-3">
+                                <img class="img-responsive" id="blueBus" src="~/Images/blueBus24.png" usemap="#imageMap">
+                            </div>
+                            <div class="col-lg-9 col-sm-9">
+                                Bus is early
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+            </div>
+        </div>
+    </div>
+            
+     </div><!--/.box-->
+
+    <div class="container">
+     <div class="small label-info">
+         Disclaimer: We have try to make the application as accurate as possible. 
+         However, We make no warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the application or the information provided.
+     </div>
+      <hr>
+</div>

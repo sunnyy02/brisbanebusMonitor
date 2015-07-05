@@ -1,0 +1,325 @@
+﻿@{
+    ViewBag.Title = "NewApplication";
+}
+
+
+<div class="container">
+    <h2>New Application</h2>
+    <div id="rootwizard" style="padding-left: 100px; padding-right: 100px">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="container">
+                    <ul>
+                        <li><a href="#tab1" data-toggle="tab">Select License</a></li>
+                        <li><a href="#tab2" data-toggle="tab">Choose blocks</a></li>
+                        <li><a href="#tab3" data-toggle="tab">Supporting Documents</a></li>
+                        <li><a href="#tab4" data-toggle="tab">Fee</a></li>
+                        <li><a href="#tab5" data-toggle="tab">Confirmation</a></li>
+                        @*<li><a href="#tab6" data-toggle="tab">Sixth</a></li>
+                            <li><a href="#tab7" data-toggle="tab">Seventh</a></li>*@
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content">
+            <div class="tab-pane" id="tab1">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <select class="form-control">
+                            <option>Please Select License to Apply</option>
+                            <option>PPL (Petroleum Prospecting License)</option>
+                            <option>PRL (Petroleum Retention License)</option>
+                            <option>PDL (Petroleum Development License)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="tab2">
+                <div class="row">
+
+                    <div class="panel panel-default"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <select class="form-control">
+                                <option>Please Select Map Sheet</option>
+                                <option>Map Sheet 1</option>
+                                <option>Map Sheet 2</option>
+                                <option>Map Sheet 3</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <p></p>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="~/Images/Papua  New Guinea.jpg" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 1
+                            </label>
+                        </div><div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 2
+                            </label>
+                        </div><div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 3
+                            </label>
+                        </div><div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 4
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 5
+                            </label>
+                        </div><div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 6
+                            </label>
+                        </div><div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 7
+                            </label>
+                        </div><div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 8
+                            </label>
+                        </div>
+                    </div><div class="col-md-2">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 9
+                            </label>
+                        </div><div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 10
+                            </label>
+                        </div><div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 11
+                            </label>
+                        </div><div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 12
+                            </label>
+                        </div>
+                    </div><div class="col-md-2">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 13
+                            </label>
+                        </div><div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 14
+                            </label>
+                        </div><div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 15
+                            </label>
+                        </div><div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="true">Block 16
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="tab3">
+                <div class="row">
+                    <h4>Work expenditure</h4>
+                </div>
+                <br />
+                <div id="insertNewFile" class="row">
+                    <label id="uploadedFile" class="form-label">workexpenditure.doc</label> <a id="deleteFile" class="btn btn-danger">x</a>
+                </div>
+                <br />
+                <div class="row">
+                    <input type="file"/><a id="addFile" class="btn btn-primary">+</a>
+                </div>
+                <br />
+                <div class="row">
+                    <h4>Tehcnical qualification</h4>
+                </div>
+                <br />
+                <div class="row">
+                    <label class="form-label">tehcnicalqualification.doc</label> <a class="btn btn-danger">x</a>
+                </div>
+                <br />
+                <div class="row">
+                    <input type="file" /><a class="btn btn-primary">+</a>
+                </div>
+                <br />
+                <div class="row">
+                    <h4>Tehcnical advice</h4>
+                </div><br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="form-label">tehcnicaladvice.doc</label><a class="btn btn-danger">x</a>
+                    </div>
+                </div><br />
+                <div class="row">
+                    <div class="form-group">
+                        <input type="file"><a class="btn btn-primary">+</a>
+                    </div>
+                </div><br />
+                <div class="row">
+                    <h4>Finacial resources</h4>
+                </div><br />
+                <div class="row">
+                    <label class="form-label">finacialresources.doc</label> <a class="btn btn-danger">x</a>
+                </div><br />
+                <div class="row">
+                    <input type="file"><a class="btn btn-primary">+</a>
+                </div><br />
+                <div class="row">
+                    <h4>Other matters</h4>
+                </div>
+            </div>
+            <div class="tab-pane" id="tab4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Processing Fee (Payment Reference Number): </label>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Application Fee (Payment Reference Number): </label>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="tab5">
+                <textarea class="form-control" style="height: 400px">
+                    Welcome to our Site. These are our Terms & Conditions for use of the Site which you may access in several ways, including but not limited to the web, PDAs, mobile phones and RSS feeds. These Terms & Conditions apply whenever you access the Site, regardless of how you access the Site.
+
+                    Use of this site
+                    Nationwide News Pty Limited (News) is the owner and operator of this Site.
+                    Users of this Site (Users) agree to be bound by these Terms & Conditions, which are subject to change at News’ sole discretion. Your use of and access to this Site indicates your acceptance of these Terms & Conditions, as they exist at that time.
+
+                    Intellectual Property
+                    All intellectual property in relation to content on this Site belongs to News or its licensors, advertisers or affiliates. You obtain no interest in that intellectual property. All content on this Site is protected by Australian and international copyright and other intellectual property laws. You may not do anything which interferes with or breaches those laws or the intellectual property rights in the content.
+                    You may download and view content or print a copy of material on this Site for personal, non-commercial use provided you do not modify the content in any way (including any copyright notice). All rights not expressly granted under these terms of use are reserved by News. Unless expressly stated otherwise, you are not permitted to copy, or republish anything you find on the Site without the copyright or trademark owners’ permission.
+                    The logos of the Site and of the newspaper mastheads on any News sites are trademarks of News or its related bodies corporate. Other trademarks may be displayed on the Site from time to time. These may belong to third parties. Nothing displayed on the Site should be construed as granting any licence or right of use of any logo, trademark or masthead displayed on the Site, without the express written permission of the relevant owner.
+
+                    Liability & Indemnity
+                    News does not exclude any rights and remedies in respect of goods or services under the Competition and Consumer Act 2010 (Cth) or equivalent State or Territory legislation which cannot be excluded, restricted or modified.  However, News excludes all rights, remedies, guarantees, conditions and warranties in respect of goods or services from your use of the Site whether based in statute, common law or otherwise to the extent permitted by law.  To the fullest extent possible:
+
+                    (a) News does not warrant the accuracy of the content on the Site. The content is provided to you “as is” and on an “as available” basis and on the condition that you undertake all responsibility for assessing the accuracy of the content and rely on it at your own risk. All content on the Site may be changed at News’ sole discretion and without notice.
+
+                    (b) News will have no responsibility or liability in relation to any loss or damage that you incur, including damage to your software or hardware, arising from your use of or access to this Site, subject only to paragraph 6(d).
+
+                    (c) News does not warrant that functions contained in the Site content, such as hyperlinks, will be uninterrupted or error free, that defects will be corrected or that News or the server that makes it available, are free of viruses or bugs.
+
+                    (d) Liability of News, for any breach of a term or condition implied by law is limited at News’ discretion, to the supply of any service again or the payment for the cost of having any service supplied again.
+
+                    (e) You indemnify News and its affiliated companies, and each of their directors, officers, employees and agents against any action, claim, loss or expense which it incurs which arises from your use of the Site.
+
+                    Third Party Content & Links
+                    This Site may include third party content which is subject to that third party's terms and conditions of use. Nothing on this Site should be construed as granting any licence or right for you to use that content.
+                    This Site may include links to third party sites which are not related to News and in relation to which News has no control or interest. The appearance of those links on this site does not indicate any relationship between News and that third party or any endorsement by News of that third party, its site or the products or services which it is advertising on this Site.
+
+                    Contributing Content
+                    When you submit content to News in any format, including any text, photographs, graphics, video or audio, you grant News a non-exclusive, royalty-free, perpetual licence to publish, transmit or otherwise use that content in any way, now and in the future.
+                    News reserves the right not to use the content you submit.
+                    You warrant that you have all of the necessary rights, including copyright, in the content you contribute, that your content is not defamatory and that it does not infringe any law.
+                    You indemnify News against any and all legal fees, damages and other expenses that may be incurred by News as a result of a breach of the above warranty.
+                    You waive any moral rights in your contribution for the purposes of its submission to and use by News in accordance with these terms.
+
+                    General
+                    Users will not use this site for any purpose or in any way which is unlawful.
+                    These Terms & Conditions shall be governed by and interpreted in accordance with the laws of New South Wales.
+                    Responsibility for all election comment is taken by the editor, 2 Holt Street, Surry Hills, NSW 2010.
+                </textarea>
+                <div class="row">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="true">Please Confirm
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="tab-pane" id="tab6">
+                6
+            </div>
+            <div class="tab-pane" id="tab7">
+                7
+            </div>*@
+        <ul class="pager wizard">
+            <li class="previous first"><a href="javascript:;">First</a></li>
+            <li class="previous"><a href="javascript:;">Previous</a></li>
+            <li class="info"><a href="javascript:;">Save</a></li>
+            <li class="next last"><a href="javascript:;">Last</a></li>
+            <li class="next"><a href="javascript:;">Next</a></li>
+            <li class="next finish" style="display:none;"><a href="javascript:;">Finish</a></li>
+        </ul>
+    </div>
+</div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+       
+            $('#FirstTimeLink').hide();
+            $('#signInForm').hide();
+            $('#welcomeMessage').show();
+            $('#menuDropdown').show();
+        
+       
+        $('#deleteFile').click(function () {
+            $('#uploadedFile').hide();
+            $('#deleteFile').hide();
+        });
+
+        $('#addFile').click(function () {
+            $('#insertNewFile').append('<br/><label id="uploadedFile" class="form-label">new file.doc</label> <a id="deleteFile" class="btn btn-danger">x</a>');
+        });
+
+        $('#rootwizard').bootstrapWizard({
+            onTabShow: function (tab, navigation, index) {
+                var $total = navigation.find('li').length;
+                var $current = index + 1;
+                var $percent = ($current / $total) * 100;
+                $('#rootwizard').find('.bar').css({ width: $percent + '%' });
+
+                // If it's the last tab then hide the last button and show the finish instead
+                if ($current >= $total) {
+                    $('#rootwizard').find('.pager .next').hide();
+                    $('#rootwizard').find('.pager .finish').show();
+                    $('#rootwizard').find('.pager .finish').removeClass('disabled');
+                } else {
+                    $('#rootwizard').find('.pager .next').show();
+                    $('#rootwizard').find('.pager .finish').hide();
+                }
+
+            }
+        });
+        $('#rootwizard .finish').click(function () {
+            alert('Finished!, Starting over!');
+            $('#rootwizard').find("a[href*='tab1']").trigger('click');
+        });
+    });
+
+$(function () {
+   
+});
+</script>

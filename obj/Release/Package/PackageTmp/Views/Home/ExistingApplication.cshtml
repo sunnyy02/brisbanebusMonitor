@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "ExistingApplication";
+}
+
+<div class="container">
+    <h2>Existing Application</h2>
+
+    <div class="row">
+        <h4>License PPL</h4> <label>Status: Saved</label>
+    </div>
+    <div class="row">
+        <lable>Application Date: @DateTime.Now.ToShortDateString()</lable>
+    </div>
+    <div class="row">
+        <a class="btn btn-primary" href="\home\NewApplication">Resume</a>
+        <a class="btn btn-warning">Delete</a>
+    </div>
+    <div class="divider"></div>
+    <br /><br />
+    <div class="row">
+        <h4>License PRL</h4> <label>Status: Saved</label>
+    </div>
+    <div class="row">
+        <lable>Application Date: @DateTime.Now.ToShortDateString()</lable>
+    </div>
+    <div class="row">
+        <a class="btn btn-primary" href="\home\NewApplication">Resume</a>
+        <a class="btn btn-warning">Delete</a>
+    </div>
+    <div class="divider"></div>
+    <br /><br />
+    <div class="row">
+        <h4>License Pipeline</h4> <label>Status: Pending Approval</label>
+    </div>
+    <div class="row">
+        <lable>Application Date: @DateTime.Now.ToShortDateString()</lable>
+    </div>
+    <div class="row">
+        <a class="btn btn-primary">Withdraw</a>
+    </div>
+    <div class="divider"></div>
+    <br /><br />
+    <div class="row">
+        <h4>License Pipeline</h4> <label>Status: Rejected</label>
+    </div>
+    <div class="row">
+        <label>Reason: require more document</label>
+    </div>
+    <div class="row">
+        <lable>Application Date: @DateTime.Now.ToShortDateString()</lable>
+    </div>
+    <div class="row">
+        <a class="btn btn-primary" href="\home\NewApplication">Edit</a>
+    </div>
+    <div class="divider"></div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#FirstTimeLink').hide();
+        $('#signInForm').hide();
+        $('#welcomeMessage').show();
+        $('#menuDropdown').show();
+    });
+</script>
+

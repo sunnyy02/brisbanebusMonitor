@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "NewUser";
+}
+
+<div class="row" style="margin-top: 40px">
+    <div class="col-md-6">
+        @*<small><i></i>Add alerts if form ok... success, else error.</i></small>*@
+        <div class="alert alert-success" style="display: none"><strong><span class="glyphicon glyphicon-send"></span>Success! There will be a confimation email sent your provided email in 24 hours. Please check.</strong></div>
+        <div class="alert alert-danger" style="display: none"><span class="glyphicon glyphicon-alert"></span><strong> Error! Please check the inputs. (If form error!)</strong></div>
+    </div>
+</div>
+<div class="container" id="UserRegistrationRegion" style="margin-top: 40px">
+    <div class="row">
+        <div class="col-md-12">
+            @*<small><i></i>Add alerts if form ok... success, else error.</i></small>*@
+            <div class="alert alert-success" style="display: none"><strong><span class="glyphicon glyphicon-send"></span>Success! There will be a confimation email sent your provided email in 24 hours. Please check.</strong></div>
+            <div class="alert alert-danger" style="display: none"><span class="glyphicon glyphicon-alert"></span><strong> Error! Please check the inputs. (If form error!)</strong></div>
+        </div>
+        @*<form role="form" action="" method="post">*@
+        <div class="col-lg-6">
+            <div class="well well-sm"><strong><i class="glyphicon glyphicon-ok form-control-feedback"></i> Required Field</strong></div>
+            <div class="form-group">
+                <label for="InputName">Company Name</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="InputName" id="InputName" placeholder="Enter Company Name" required>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="InputName">Company business number</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="InputName" id="InputName" placeholder="Enter Company business number" required>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="InputName">Contact Person Name</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="InputName" id="InputName" placeholder="Enter Contact Person Name" required>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="InputEmail">Contact Person Email</label>
+                <div class="input-group">
+                    <input type="email" class="form-control" id="InputEmail" name="InputEmail" placeholder="Enter Contact Person Email" required>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="InputName">Contact Phone number</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="InputName" id="InputName" placeholder="Enter Contact Phone number" required>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="InputName">Password</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" name="InputName" id="InputName" placeholder="Enter Password" required>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="InputName">Confirm Password</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" name="InputName" id="InputName" placeholder="Enter confirm Password" required>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="InputName">Registration Fee</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="InputName" id="InputName" placeholder="Enter Registration Fee" required>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="InputReal">What is 7+3? (Simple Spam Checker)</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="InputReal" id="InputReal" required>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <a id="confirmButton" class="btn btn-primary">Confirm</a>
+                </div>
+                <div class="col-md-2">
+                    <a class="btn btn-primary">Cancel</a>
+                </div>
+            </div>
+        </div>
+        @*</form>*@
+        <hr class="featurette-divider hidden-lg">
+       
+    </div>
+    <script>
+
+        $(document).ready(function () {
+
+            $('#confirmButton').click(function () {
+                $('#UserRegistrationRegion').hide();
+                $('.alert-success').show();
+            });
+
+        });
+    </script>
+</div>
+
